@@ -1,0 +1,8 @@
+# Copy to gradle-publish.local.properties (gitignored) — never commit real values.
+# Used by scripts/setup-gradle-publish-props.sh
+#
+# Sonatype: central.sonatype.com → profile menu → View User Tokens → Generate User Token
+
+mavenCentralUsername=your-central-portal-token-username
+mavenCentralPassword=your-central-portal-token-password
+signingGpgPassphrase=your-gpg-passphrase

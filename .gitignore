@@ -3,6 +3,7 @@
 build/
 **/build/
 local.properties
+gradle-publish.local.properties
 
 # Android Studio
 .idea/
