@@ -36,7 +36,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.DevGuard-uk.android-dev-guard-sdk:sdk:1.0.1")
+    implementation("com.github.DevGuard-uk.android-dev-guard-sdk:android-sdk:1.0.1")
 }
 ```
 
