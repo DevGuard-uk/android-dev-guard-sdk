@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "io.devguard"
-version = "1.0.0"
+version = "1.0.1"
 
 android {
     namespace = "io.devguard"
@@ -49,7 +49,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = "io.devguard"
                 artifactId = "android-sdk"
-                version = "1.0.0"
+                version = "1.0.1"
             }
         }
     }
