@@ -1,0 +1,28 @@
+# Gradle
+.gradle/
+build/
+**/build/
+local.properties
+
+# Android Studio
+.idea/
+*.iml
+*.ipr
+*.iws
+**/.cxx/
+.cxx/
+
+# Outputs
+*.apk
+*.aab
+*.dex
+captures/
+output.json
+
+# NDK / CMake
+.externalNativeBuild/
+*.so.tmp
+
+# OS
+.DS_Store
+Thumbs.db
