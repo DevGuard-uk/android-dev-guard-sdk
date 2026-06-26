@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-06-26
+
+### Fixed
+- Native C/C++ linkage for Linux CI (JitPack) — `extern "C"` guards in `devguard_core.h`.
+
 ## [1.0.0] - 2026-06-26
 
 ### Added

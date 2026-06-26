@@ -10,6 +10,10 @@
 #define DEVGUARD_EXPORT __attribute__((visibility("default"))) __attribute__((used))
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 DEVGUARD_EXPORT void dg_x9(const char* project_id, long long timestamp, char* output);
 DEVGUARD_EXPORT int dg_v2(const char* response_body, const char* signature);
 DEVGUARD_EXPORT void dg_s3(const char* token, char* output);
@@ -27,5 +31,9 @@ DEVGUARD_EXPORT int dg_r8(void);
 DEVGUARD_EXPORT int dg_e1(int block_emulators, int is_physical, int is_compromised);
 DEVGUARD_EXPORT void dg_u1(char* output);
 DEVGUARD_EXPORT int dg_u2(const char* url);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // DEVGUARD_CORE_H
