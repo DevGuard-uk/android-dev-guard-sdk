@@ -2,10 +2,8 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("maven-publish")
+    id("signing")
 }
-
-group = "io.devguard"
-version = "1.0.1"
 
 android {
     namespace = "io.devguard.core"
@@ -49,9 +47,9 @@ afterEvaluate {
         publications {
             create<MavenPublication>("release") {
                 from(components["release"])
-                groupId = "io.devguard"
+                groupId = rootProject.findProperty("GROUP")?.toString() ?: "uk.devguard"
                 artifactId = "android-core"
-                version = "1.0.1"
+                version = project.version.toString()
             }
         }
     }

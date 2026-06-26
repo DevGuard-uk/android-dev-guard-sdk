@@ -1,6 +1,6 @@
 # Native Android DevGuard SDK
 
-Kotlin SDK for native Android applications. Published artifact: **`io.devguard:android-sdk`**.
+Kotlin SDK for native Android applications. Published artifact: **`uk.devguard:android-sdk`**.
 
 Public repository: [github.com/DevGuard-uk/android-dev-guard-sdk](https://github.com/DevGuard-uk/android-dev-guard-sdk)
 
@@ -26,6 +26,21 @@ Public repository: [github.com/DevGuard-uk/android-dev-guard-sdk](https://github
 
 ## Install
 
+### Maven Central (recommended)
+
+See **[MAVEN_CENTRAL_SETUP.md](./MAVEN_CENTRAL_SETUP.md)** for one-time Sonatype + GPG setup.  
+Maintainers: **[DEPLOYMENT.md](./DEPLOYMENT.md)** — full manual release workflow (sync, build, publish, GitHub, PR).
+
+```kotlin
+dependencies {
+    implementation("uk.devguard:android-sdk:1.0.1")
+}
+```
+
+No extra repository block — resolves from Maven Central like any standard Android library.
+
+### JitPack (fallback)
+
 Add JitPack and the SDK dependency in your app `build.gradle.kts`:
 
 ```kotlin
@@ -50,7 +65,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.DevGuard-uk.android-dev-guard-sdk:sdk:1.0.0'
+    implementation 'com.github.DevGuard-uk.android-dev-guard-sdk:android-sdk:1.0.1'
 }
 ```
 

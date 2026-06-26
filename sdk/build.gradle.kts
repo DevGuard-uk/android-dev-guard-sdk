@@ -2,10 +2,8 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("maven-publish")
+    id("signing")
 }
-
-group = "io.devguard"
-version = "1.0.1"
 
 android {
     namespace = "io.devguard"
@@ -33,8 +31,8 @@ android {
 }
 
 dependencies {
-    implementation(project(":core"))
-    implementation(project(":crash-reporter"))
+    api(project(":core"))
+    api(project(":crash-reporter"))
     implementation("androidx.core:core-ktx:1.16.0")
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
@@ -47,9 +45,9 @@ afterEvaluate {
         publications {
             create<MavenPublication>("release") {
                 from(components["release"])
-                groupId = "io.devguard"
+                groupId = rootProject.findProperty("GROUP")?.toString() ?: "uk.devguard"
                 artifactId = "android-sdk"
-                version = "1.0.1"
+                version = project.version.toString()
             }
         }
     }

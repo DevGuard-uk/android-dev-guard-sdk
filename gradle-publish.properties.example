@@ -1,0 +1,16 @@
+# Secrets live in gradle-publish.local.properties (gitignored) — see signing-keys.properties for key IDs.
+#
+# One command setup → ~/.gradle/gradle.properties:
+#   cp gradle-publish.local.properties.example gradle-publish.local.properties
+#   # fill Sonatype token + GPG passphrase
+#   ./scripts/setup-gradle-publish-props.sh
+#
+# Sonatype: central.sonatype.com → profile menu → View User Tokens
+
+mavenCentralUsername=your-central-portal-token-username
+mavenCentralPassword=your-central-portal-token-password
+
+# From signing-keys.properties → signingGpgKeyIdShort
+signingInMemoryKeyId=719C0412
+signingInMemoryPassword=your-gpg-passphrase
+signingInMemoryKey=-----BEGIN PGP PRIVATE KEY-----\n...\n-----END PGP PRIVATE KEY-----

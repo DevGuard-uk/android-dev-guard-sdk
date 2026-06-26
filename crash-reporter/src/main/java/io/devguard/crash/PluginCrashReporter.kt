@@ -15,7 +15,7 @@ typealias PluginCrashMetadataProvider = suspend () -> Map<String, Any?>?
 
 /**
  * Fire-and-forget plugin crash telemetry to the DevGuard API.
- * Publishable separately as `io.devguard:android-crash-reporter`.
+ * Publishable separately as `uk.devguard:android-crash-reporter`.
  */
 object PluginCrashReporter {
     private const val HDR_SIG = "X-DevGuard-Signature"
