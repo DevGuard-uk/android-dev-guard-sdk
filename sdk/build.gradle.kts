@@ -2,11 +2,15 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("maven-publish")
-    id("signing")
+    signing
 }
 
+group = rootProject.findProperty("GROUP")?.toString() ?: "uk.devguard"
+val releaseVersion = rootProject.findProperty("VERSION_NAME")?.toString() ?: "1.0.2"
+version = releaseVersion
+
 android {
-    namespace = "io.devguard"
+    namespace = "uk.devguard"
     compileSdk = 36
 
     defaultConfig {
@@ -31,8 +35,8 @@ android {
 }
 
 dependencies {
-    api(project(":core"))
-    api(project(":crash-reporter"))
+    implementation(project(":core"))
+    implementation(project(":crash-reporter"))
     implementation("androidx.core:core-ktx:1.16.0")
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
@@ -47,7 +51,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = rootProject.findProperty("GROUP")?.toString() ?: "uk.devguard"
                 artifactId = "android-sdk"
-                version = project.version.toString()
+                version = releaseVersion
             }
         }
     }

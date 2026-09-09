@@ -1,14 +1,31 @@
 # Native Android DevGuard SDK
 
-Kotlin SDK for native Android applications. Published artifact: **`uk.devguard:android-sdk`**.
+<p align="center">
+  <a href="https://devguard.uk">
+    <img src="assets/logo.png" alt="DevGuard" width="120" height="120" />
+  </a>
+</p>
 
-Public repository: [github.com/DevGuard-uk/android-dev-guard-sdk](https://github.com/DevGuard-uk/android-dev-guard-sdk)
+<p align="center">
+  <a href="https://devguard.uk"><img src="https://img.shields.io/badge/website-devguard.uk-6C47FF?style=flat-square" alt="Website" /></a>
+  <a href="https://github.com/DevGuard-uk/android-dev-guard-sdk"><img src="https://img.shields.io/badge/github-DevGuard--uk-181717?style=flat-square" alt="GitHub" /></a>
+  <img src="https://img.shields.io/badge/platform-Android-3DDC84?style=flat-square" alt="Android" />
+  <img src="https://img.shields.io/badge/maven-uk.devguard%3Aandroid--sdk-2D7DD2?style=flat-square" alt="Maven" />
+  <img src="https://img.shields.io/badge/license-MIT-3CB371?style=flat-square" alt="License" />
+</p>
+
+Kotlin SDK for native Android applications. Artifact: **`uk.devguard:android-sdk`**.
 
 <table>
   <tr>
     <td align="center" width="33%"><img src="screenshots/welcome-screen.png" width="240" alt="Active and protected app" /></td>
     <td align="center" width="33%"><img src="screenshots/payment-reminder.png" width="240" alt="In-app warning banner" /></td>
     <td align="center" width="33%"><img src="screenshots/access-suspended.png" width="240" alt="Access suspended lock screen" /></td>
+  </tr>
+  <tr>
+    <td align="center"><b>Active &amp; Protected</b><br/><code>ACTIVE</code></td>
+    <td align="center"><b>In-App Warning</b><br/><code>WARNING</code></td>
+    <td align="center"><b>Access Suspended</b><br/><code>LOCKED</code></td>
   </tr>
 </table>
 
@@ -21,74 +38,39 @@ Public repository: [github.com/DevGuard-uk/android-dev-guard-sdk](https://github
 - Device registration token persistence
 - Remote wipe (`wipeNonce` / beta features)
 - `setDeviceUser` for Developer Portal → Users
+- `setUserLog` for Developer Portal → User Journey (plan-gated upload)
 - Compromised-device and emulator policy enforcement
-- Built-in plugin crash telemetry
 
 ## Install
 
-### Maven Central (recommended)
-
-See **[MAVEN_CENTRAL_SETUP.md](./MAVEN_CENTRAL_SETUP.md)** for one-time Sonatype + GPG setup.  
-Maintainers: **[DEPLOYMENT.md](./DEPLOYMENT.md)** — full manual release workflow (sync, build, publish, GitHub, PR).
-
-```kotlin
-dependencies {
-    implementation("uk.devguard:android-sdk:1.0.1")
-}
-```
-
-No extra repository block — resolves from Maven Central like any standard Android library.
-
-### JitPack (fallback)
-
-Add JitPack and the SDK dependency in your app `build.gradle.kts`:
+Maven Central:
 
 ```kotlin
 repositories {
     google()
     mavenCentral()
-    maven { url = uri("https://jitpack.io") }
 }
 
 dependencies {
-    implementation("com.github.DevGuard-uk.android-dev-guard-sdk:android-sdk:1.0.1")
+    implementation("uk.devguard:android-sdk:1.0.2")
 }
 ```
 
-Groovy `build.gradle`:
+Maven groupId, Sonatype namespace, and Kotlin imports all use **`uk.devguard.*`**.
 
-```groovy
-repositories {
-    google()
-    mavenCentral()
-    maven { url 'https://jitpack.io' }
-}
-
-dependencies {
-    implementation 'com.github.DevGuard-uk.android-dev-guard-sdk:android-sdk:1.0.1'
-}
-```
-
-[JitPack build page](https://jitpack.io/#DevGuard-uk/android-dev-guard-sdk)
+Public repository: [github.com/DevGuard-uk/android-dev-guard-sdk](https://github.com/DevGuard-uk/android-dev-guard-sdk)
 
 ## Quick start
 
 ```kotlin
-DevGuard.init(
+DevGuard.initialize(
     context = applicationContext,
     projectId = "your_project_id",
     secret = "YOUR_MASTER_SECRET",
 )
-DevGuard.attachShield(activity)
 ```
 
 Sign up at [devguard.uk](https://devguard.uk) for a **Project ID** and **Master Secret**.
-
-## Build from source
-
-```bash
-./gradlew :sdk:assembleRelease
-```
 
 ## Support
 

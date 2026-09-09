@@ -2,11 +2,15 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("maven-publish")
-    id("signing")
+    signing
 }
 
+group = rootProject.findProperty("GROUP")?.toString() ?: "uk.devguard"
+val releaseVersion = rootProject.findProperty("VERSION_NAME")?.toString() ?: "1.0.2"
+version = releaseVersion
+
 android {
-    namespace = "io.devguard.core"
+    namespace = "uk.devguard.core"
     compileSdk = 36
 
     defaultConfig {
@@ -49,7 +53,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = rootProject.findProperty("GROUP")?.toString() ?: "uk.devguard"
                 artifactId = "android-core"
-                version = project.version.toString()
+                version = releaseVersion
             }
         }
     }

@@ -6,7 +6,7 @@ End-to-end checklist for shipping **`deployment/native-android-dev-guard/`** to 
 
 | Doc | Purpose |
 |-----|---------|
-| [MAVEN_CENTRAL_SETUP.md](./MAVEN_CENTRAL_SETUP.md) | One-time Sonatype account, namespace, GPG, credentials |
+| [docs/75-android-maven-central-setup.md](../../../docs/75-android-maven-central-setup.md) | One-time Sonatype account, namespace, GPG, credentials |
 | [../../deployment/README.md](../../deployment/README.md) | All SDK deployment folders + rsync commands |
 | [README.md](./README.md) | Integrator install snippet |
 
@@ -19,7 +19,7 @@ End-to-end checklist for shipping **`deployment/native-android-dev-guard/`** to 
 
 ## Quick reference (repeat releases)
 
-After one-time setup in [MAVEN_CENTRAL_SETUP.md](./MAVEN_CENTRAL_SETUP.md):
+After one-time setup in [docs/75-android-maven-central-setup.md](../../../docs/75-android-maven-central-setup.md):
 
 ```bash
 # 1. Sync private → deployment (from monorepo root)
@@ -47,7 +47,7 @@ node ../../testing_suite/scripts/test_native_sdk_smoke.js --android-only
 
 ## Phase A — One-time setup (~30 min)
 
-Do once per machine / org. Details: [MAVEN_CENTRAL_SETUP.md](./MAVEN_CENTRAL_SETUP.md).
+Do once per machine / org. Details: [docs/75-android-maven-central-setup.md](../../../docs/75-android-maven-central-setup.md).
 
 | Step | Action |
 |------|--------|
@@ -185,11 +185,11 @@ Integrators add:
 ```kotlin
 repositories { mavenCentral() }
 dependencies {
-    implementation("uk.devguard:android-sdk:1.0.1")
+    implementation("uk.devguard:android-sdk:1.0.2")
 }
 ```
 
-Kotlin imports stay `io.devguard.*` — only Maven `groupId` is `uk.devguard`.
+Kotlin imports use **`uk.devguard.*`** — same prefix as the Maven groupId. See [docs/39-native-android-sdk.md](../../docs/39-native-android-sdk.md).
 
 ---
 

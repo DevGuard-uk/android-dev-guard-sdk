@@ -2,11 +2,15 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("maven-publish")
-    id("signing")
+    signing
 }
 
+group = rootProject.findProperty("GROUP")?.toString() ?: "uk.devguard"
+val releaseVersion = rootProject.findProperty("VERSION_NAME")?.toString() ?: "1.0.2"
+version = releaseVersion
+
 android {
-    namespace = "io.devguard.crash"
+    namespace = "uk.devguard.crash"
     compileSdk = 36
 
     defaultConfig {
@@ -31,7 +35,7 @@ android {
 }
 
 dependencies {
-    api(project(":core"))
+    implementation(project(":core"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.1")
 }
 
@@ -42,7 +46,7 @@ afterEvaluate {
                 from(components["release"])
                 groupId = rootProject.findProperty("GROUP")?.toString() ?: "uk.devguard"
                 artifactId = "android-crash-reporter"
-                version = project.version.toString()
+                version = releaseVersion
             }
         }
     }

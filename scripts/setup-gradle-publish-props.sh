@@ -8,7 +8,7 @@
 #   ./scripts/setup-gradle-publish-props.sh
 #
 # Override via env: GPG_KEY_ID, GPG_PASSPHRASE, MAVEN_CENTRAL_USERNAME, MAVEN_CENTRAL_PASSWORD
-# See ../DEPLOYMENT.md and ../MAVEN_CENTRAL_SETUP.md
+# See ../DEPLOYMENT.md and docs/75-android-maven-central-setup.md
 
 set -euo pipefail
 

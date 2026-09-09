@@ -19,7 +19,7 @@ plugins {
 
 subprojects {
     group = findProperty("GROUP") ?: "uk.devguard"
-    version = findProperty("VERSION_NAME") ?: "1.0.1"
+    version = findProperty("VERSION_NAME") ?: "1.0.2"
 }
 
 gradle.projectsEvaluated {
@@ -100,6 +100,64 @@ tasks.register("publishAllToMavenCentral") {
     finalizedBy("transferMavenCentralStagingToPortal")
 }
 
+tasks.register("dropMavenCentralStagingRepos") {
+    group = "publishing"
+    description = "Drop open OSSRH staging repos for this namespace (cleanup after failed publishes)."
+
+    doLast {
+        val publishToCentral = findProperty("mavenCentralPublishing")?.toString() == "true"
+        if (!publishToCentral) return@doLast
+
+        val username = findProperty("mavenCentralUsername")?.toString()
+            ?: System.getenv("ORG_GRADLE_PROJECT_mavenCentralUsername")
+        val password = findProperty("mavenCentralPassword")?.toString()
+            ?: System.getenv("ORG_GRADLE_PROJECT_mavenCentralPassword")
+        require(!username.isNullOrBlank() && !password.isNullOrBlank()) {
+            "Missing mavenCentralUsername / mavenCentralPassword in ~/.gradle/gradle.properties"
+        }
+
+        val namespace = findProperty("GROUP")?.toString() ?: "uk.devguard"
+        val token = Base64.getEncoder().encodeToString("$username:$password".toByteArray(StandardCharsets.UTF_8))
+        val client = HttpClient.newHttpClient()
+        fun bearerRequest(url: String, method: String = "POST"): HttpResponse<String> {
+            val request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("Authorization", "Bearer $token")
+                .method(method, HttpRequest.BodyPublishers.noBody())
+                .build()
+            return client.send(request, HttpResponse.BodyHandlers.ofString())
+        }
+
+        val searchUrl =
+            "https://ossrh-staging-api.central.sonatype.com/manual/search/repositories?ip=any&profile_id=$namespace"
+        val searchResponse = bearerRequest(searchUrl, method = "GET")
+        check(searchResponse.statusCode() in 200..299) {
+            "Repository search failed: HTTP ${searchResponse.statusCode()} ${searchResponse.body()}"
+        }
+
+        val keyRegex = """"key"\s*:\s*"([^"]+)"""".toRegex()
+        val openKeys = keyRegex.findAll(searchResponse.body())
+            .map { it.groupValues[1] }
+            .filter { it.contains(namespace) }
+            .toList()
+
+        if (openKeys.isEmpty()) {
+            logger.lifecycle("No open staging repositories to drop for $namespace.")
+            return@doLast
+        }
+
+        for (repoKey in openKeys) {
+            val encodedKey = URLEncoder.encode(repoKey, StandardCharsets.UTF_8)
+            val dropUrl =
+                "https://ossrh-staging-api.central.sonatype.com/manual/drop/repository/$encodedKey"
+            val dropResponse = bearerRequest(dropUrl, method = "DELETE")
+            logger.lifecycle(
+                "Dropped staging repo '$repoKey': HTTP ${dropResponse.statusCode()} ${dropResponse.body()}"
+            )
+        }
+    }
+}
+
 tasks.register("transferMavenCentralStagingToPortal") {
     group = "publishing"
     description =
@@ -141,11 +199,11 @@ tasks.register("transferMavenCentralStagingToPortal") {
         }
 
         logger.lifecycle(
-            "defaultRepository transfer returned HTTP ${defaultResponse.statusCode()}; trying repository search."
+            "defaultRepository transfer returned HTTP ${defaultResponse.statusCode()}: ${defaultResponse.body()}; trying repository search."
         )
 
         val searchUrl =
-            "https://ossrh-staging-api.central.sonatype.com/manual/search/repositories?ip=any&profile_id=$namespace"
+            "https://ossrh-staging-api.central.sonatype.com/manual/search/repositories?ip=client&profile_id=$namespace"
         val searchResponse = bearerRequest(searchUrl, method = "GET")
         check(searchResponse.statusCode() in 200..299) {
             "Repository search failed: HTTP ${searchResponse.statusCode()} ${searchResponse.body()}"
@@ -160,14 +218,23 @@ tasks.register("transferMavenCentralStagingToPortal") {
             "No open staging repository found for $namespace. Body: ${searchResponse.body()}"
         }
 
-        val repoKey = openKeys.last()
-        val encodedKey = URLEncoder.encode(repoKey, StandardCharsets.UTF_8)
-        val uploadUrl =
-            "https://ossrh-staging-api.central.sonatype.com/manual/upload/repository/$encodedKey"
-        val uploadResponse = bearerRequest(uploadUrl)
-        check(uploadResponse.statusCode() in 200..299) {
-            "Repository upload failed: HTTP ${uploadResponse.statusCode()} ${uploadResponse.body()}"
+        var transferred = false
+        var lastError = ""
+        for (repoKey in openKeys.asReversed()) {
+            val encodedKey = URLEncoder.encode(repoKey, StandardCharsets.UTF_8)
+            val uploadUrl =
+                "https://ossrh-staging-api.central.sonatype.com/manual/upload/repository/$encodedKey"
+            val uploadResponse = bearerRequest(uploadUrl)
+            if (uploadResponse.statusCode() in 200..299) {
+                logger.lifecycle("Transferred staging repository '$repoKey' to Central Portal.")
+                transferred = true
+                break
+            }
+            lastError = "HTTP ${uploadResponse.statusCode()} ${uploadResponse.body()}"
+            logger.lifecycle("Skipping empty staging repo '$repoKey': $lastError")
         }
-        logger.lifecycle("Transferred staging repository '$repoKey' to Central Portal.")
+        check(transferred) {
+            "Repository upload failed for all ${openKeys.size} staging repos. Last: $lastError"
+        }
     }
 }
